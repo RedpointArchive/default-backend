@@ -27,6 +27,13 @@ namespace RedpointDefaultBackend
 
             app.Run(async (context) =>
             {
+                if (context.Request.Path.HasValue && context.Request.Path.Value == "/healthz")
+                {
+                    context.Response.StatusCode = 200;
+                    await context.Response.WriteAsync("Ok");
+                    return;
+                }
+
                 if (context.Request.GetTypedHeaders().Accept.Any(x => x.MediaType == "application/json") ||
                     (context.Request.Headers.ContainsKey("X-Format") && context.Request.Headers["X-Format"].Aggregate((a, b) => a + b).Trim().Contains("application/json")))
                 {
